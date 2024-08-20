@@ -1,44 +1,22 @@
 @description('Specifies the name of the deployment.')
-param name string
+param name string = 'aipd-218'
 
 @description('Specifies the name of the environment.')
-param environment string
+param environment string = ''
 
 @description('Specifies the location of the Azure Machine Learning workspace and dependent resources.')
-@allowed([
-  'australiaeast'
-  'brazilsouth'
-  'canadacentral'
-  'centralus'
-  'eastasia'
-  'eastus'
-  'eastus2'
-  'francecentral'
-  'japaneast'
-  'koreacentral'
-  'northcentralus'
-  'northeurope'
-  'southeastasia'
-  'southcentralus'
-  'uksouth'
-  'westcentralus'
-  'westus'
-  'westus2'
-  'westeurope'
-  'usgovvirginia'
-])
-param location string
+param location string = 'germanywestcentral'
 
 var tenantId = subscription().tenantId
 var storageAccountName = 'st${name}${environment}'
 var keyVaultName = 'kv-${name}-${environment}'
 var applicationInsightsName = 'appi-${name}-${environment}'
-var containerRegistryName = 'cr${name}${environment}'
-var workspaceName = 'mlw${name}${environment}'
+// var containerRegistryName = 'cr${name}${environment}'
+var workspaceName = 'ws-${name}${environment}'
 var storageAccountId = storageAccount.id
 var keyVaultId = vault.id
 var applicationInsightId = applicationInsight.id
-var containerRegistryId = registry.id
+// var containerRegistryId = registry.id
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
@@ -91,6 +69,7 @@ resource applicationInsight 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
+/*
 resource registry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = {
   sku: {
     name: 'Standard'
@@ -101,6 +80,7 @@ resource registry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = 
     adminUserEnabled: false
   }
 }
+*/
 
 resource workspace 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
   identity: {
@@ -113,6 +93,6 @@ resource workspace 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
     storageAccount: storageAccountId
     keyVault: keyVaultId
     applicationInsights: applicationInsightId
-    containerRegistry: containerRegistryId
+    // containerRegistry: containerRegistryId
   }
 }
