@@ -1,5 +1,5 @@
 @description('Specifies the name of the deployment.')
-param name string = 'aipd_218'
+param name string = 'aipd218'
 
 @description('Specifies the name of the environment.')
 param environment string = ''
