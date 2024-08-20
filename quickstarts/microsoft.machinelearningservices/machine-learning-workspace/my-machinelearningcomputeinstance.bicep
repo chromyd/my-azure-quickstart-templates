@@ -58,7 +58,7 @@ param vmSizeParam string = 'Standard_E4ds_v4'
 //   }
 // }
 
-resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/workspaces/computes@2022-05-01' = {
+resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/workspaces/computes@2024-04-01' = {
   name: '${machineLearning}/${prefix}-ci001'
   location: location
   identity: {
@@ -81,6 +81,7 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
       //   id: computeSubnetId
       // }
       vmSize: vmSizeParam
+      idleTimeBeforeShutdown: 'PT1H'
     }
   }
 }
