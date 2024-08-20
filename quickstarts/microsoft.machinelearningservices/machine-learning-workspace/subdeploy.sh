@@ -1,0 +1,1 @@
+az deployment sub create --location germanywestcentral --template-file my-resourcegroup.bicep
