@@ -4,7 +4,7 @@
 param prefix string = 'aipd218'
 
 @description('Azure Machine Learning workspace to create the compute resources in')
-param machineLearning string
+param machineLearning string = 'ws-aipd218poc'
 
 @description('Azure region of the deployment')
 param location string = 'germanywestcentral'
