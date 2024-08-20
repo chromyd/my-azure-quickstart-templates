@@ -1,1 +1,1 @@
-az deployment group create --resource-group azureml-rg-aipd-218 --template-file main.bicep
+az deployment group create --resource-group azureml-rg-aipd218 --template-file main.bicep
