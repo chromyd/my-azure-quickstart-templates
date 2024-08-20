@@ -2,7 +2,7 @@
 param name string = 'aipd218'
 
 @description('Specifies the name of the environment.')
-param environment string = ''
+param environment string = 'poc'
 
 @description('Specifies the location of the Azure Machine Learning workspace and dependent resources.')
 param location string = 'germanywestcentral'
