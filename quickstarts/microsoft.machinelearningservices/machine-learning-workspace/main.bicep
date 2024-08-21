@@ -18,6 +18,11 @@ var keyVaultId = vault.id
 var applicationInsightId = applicationInsight.id
 // var containerRegistryId = registry.id
 
+resource symbolicname 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: 'uai${name}${environment}'
+  location: location
+}
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: location
