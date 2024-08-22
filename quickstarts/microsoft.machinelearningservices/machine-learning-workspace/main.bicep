@@ -7,6 +7,8 @@ param environment string = 'poc'
 @description('Specifies the location of the Azure Machine Learning workspace and dependent resources.')
 param location string = 'germanywestcentral'
 
+param adGroupObjectId string = 'b2099344-15c1-42c1-9419-b212b96a2a98'
+
 var tenantId = subscription().tenantId
 var storageAccountName = 'st${name}${environment}'
 var keyVaultName = 'kv-${name}-${environment}'
@@ -18,7 +20,7 @@ var keyVaultId = vault.id
 var applicationInsightId = applicationInsight.id
 // var containerRegistryId = registry.id
 
-resource symbolicname 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+resource UserAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: 'uai${name}${environment}'
   location: location
 }
@@ -87,7 +89,7 @@ resource registry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = 
 }
 */
 
-resource workspace 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
+resource MachineLearningWorkspace 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
   identity: {
     type: 'SystemAssigned'
   }
@@ -99,5 +101,31 @@ resource workspace 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
     keyVault: keyVaultId
     applicationInsights: applicationInsightId
     // containerRegistry: containerRegistryId
+  }
+}
+
+resource AiDevopsRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' = {
+  name: guid('')
+  properties: {
+    description: 'This role grants access to the ML Studio Workspaces'
+    roleName: 'AI.Devops Role'
+  }
+}
+
+resource AdGroupRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid('')
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AiDevopsRole.id)
+    principalId: adGroupObjectId
+  }
+}
+
+
+resource WorkspaceRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: MachineLearningWorkspace
+  name: guid('')
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AiDevopsRole.id)
+    principalId: UserAssignedIdentity.properties.principalId
   }
 }
