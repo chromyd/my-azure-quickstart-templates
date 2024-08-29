@@ -7,7 +7,7 @@ param environment string = 'poc'
 @description('Specifies the location of the Azure Machine Learning workspace and dependent resources.')
 param location string = 'germanywestcentral'
 
-param adGroupObjectId string = 'b2099344-15c1-42c1-9419-b212b96a2a98'
+param adGroupObjectId string = '94b51563-de8f-4b10-86a7-2b5dd3d119ab'
 
 var tenantId = subscription().tenantId
 var storageAccountName = 'st${name}${environment}'
