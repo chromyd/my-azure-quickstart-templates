@@ -121,20 +121,22 @@ resource AzureMLDataScientistRole  'Microsoft.Authorization/roleDefinitions@2022
 //   }
 // }
 
+param azureMLComputeOperatorRoleId string = 'e503ece1-11d0-4e8e-8e2c-7a6c3bf38815'
+param azureMLDataScientistRoleId string = 'f6c7c914-8db3-469d-8ca1-694a8f32e121'
 
 resource WorkspaceRoleAssignmentForOps 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: MachineLearningWorkspace
-  name: guid(MachineLearningWorkspace.id, AzureMLComputeOperatorRole.id, adGroupObjectId)
+  name: guid(MachineLearningWorkspace.id, azureMLComputeOperatorRoleId, adGroupObjectId)
   properties: {
-    roleDefinitionId: AzureMLComputeOperatorRole.id
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', azureMLComputeOperatorRoleId)
     principalId: adGroupObjectId
   }
 }
 resource WorkspaceRoleAssignmentForDataScience 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: MachineLearningWorkspace
-  name: guid(MachineLearningWorkspace.id, AzureMLDataScientistRole.id, adGroupObjectId)
+  name: guid(MachineLearningWorkspace.id, azureMLDataScientistRoleId, adGroupObjectId)
   properties: {
-    roleDefinitionId: AzureMLDataScientistRole.id
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', azureMLDataScientistRoleId)
     principalId: adGroupObjectId
   }
 }
