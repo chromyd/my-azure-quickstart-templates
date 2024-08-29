@@ -90,42 +90,51 @@ resource registry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = 
 */
 
 resource MachineLearningWorkspace 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
-  identity: {
-    type: 'SystemAssigned'
-  }
   name: workspaceName
   location: location
+  identity: {
+    type: 'SystemAssigned' // TO-DO beyond POC: replace with UAI -> it can be used to grant access to Storage Account and other services
+  }
   properties: {
     friendlyName: workspaceName
     storageAccount: storageAccountId
     keyVault: keyVaultId
     applicationInsights: applicationInsightId
-    // containerRegistry: containerRegistryId
+    // containerRegistry: containerRegistryId // works without container registry, besides we currently lack permissions for it
   }
 }
 
-resource AiDevopsRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' = {
-  name: guid('')
-  properties: {
-    description: 'This role grants access to the ML Studio Workspaces'
-    roleName: 'AI.Devops Role'
-  }
+resource AzureMLComputeOperatorRole  'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = {
+  name: 'AzureML Compute Operator'
 }
 
-resource AdGroupRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid('')
+resource AzureMLDataScientistRole  'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = {
+  name: 'AzureML Data Scientist'
+}
+
+// resource AdGroupRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid('')
+//   scope: 
+//   properties: {
+//     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AiDevopsRole.id)
+//     principalId: adGroupObjectId
+//   }
+// }
+
+
+resource WorkspaceRoleAssignmentForOps 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: MachineLearningWorkspace
+  name: guid(MachineLearningWorkspace.id /*, ... */)
   properties: {
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AiDevopsRole.id)
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AzureMLComputeOperatorRole.id)
     principalId: adGroupObjectId
   }
 }
-
-
-resource WorkspaceRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource WorkspaceRoleAssignmentForDataScience 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: MachineLearningWorkspace
-  name: guid('')
+  name: guid(MachineLearningWorkspace.id /*, ... */)
   properties: {
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AiDevopsRole.id)
-    principalId: UserAssignedIdentity.properties.principalId
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AzureMLDataScientistRole.id)
+    principalId: adGroupObjectId
   }
 }
