@@ -124,7 +124,7 @@ resource AzureMLDataScientistRole  'Microsoft.Authorization/roleDefinitions@2022
 
 resource WorkspaceRoleAssignmentForOps 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: MachineLearningWorkspace
-  name: guid(MachineLearningWorkspace.id /*, ... */)
+  name: guid(MachineLearningWorkspace.id, AzureMLComputeOperatorRole.id, adGroupObjectId)
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AzureMLComputeOperatorRole.id)
     principalId: adGroupObjectId
@@ -132,7 +132,7 @@ resource WorkspaceRoleAssignmentForOps 'Microsoft.Authorization/roleAssignments@
 }
 resource WorkspaceRoleAssignmentForDataScience 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: MachineLearningWorkspace
-  name: guid(MachineLearningWorkspace.id /*, ... */)
+  name: guid(MachineLearningWorkspace.id, AzureMLDataScientistRole.id, adGroupObjectId)
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', AzureMLDataScientistRole.id)
     principalId: adGroupObjectId
